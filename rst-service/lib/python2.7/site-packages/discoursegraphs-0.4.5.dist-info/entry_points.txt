@@ -1,0 +1,3 @@
+[console_scripts]
+discoursegraphs = discoursegraphs.merging:merging_cli
+

@@ -1,0 +1,132 @@
+(Root
+  (span 1 19)
+  (Nucleus
+    (span 1 7)
+    (rel2par span)
+    (Nucleus
+      (span 1 4)
+      (rel2par span)
+      (Nucleus
+        (leaf 1)
+        (rel2par span)
+        (text _!this is a simple test file ._!))
+      (Satellite
+        (span 2 4)
+        (rel2par Elaboration)
+        (Nucleus
+          (span 2 3)
+          (rel2par span)
+          (Nucleus
+            (leaf 2)
+            (rel2par Joint)
+            (text _!I send it to docker feng_!))
+          (Nucleus
+            (leaf 3)
+            (rel2par Joint)
+            (text _!and it must be parsed ._!)))
+        (Satellite
+          (leaf 4)
+          (rel2par Elaboration)
+          (text _!Maybe a longer file will work ?_!))))
+    (Satellite
+      (span 5 7)
+      (rel2par Elaboration)
+      (Nucleus
+        (span 5 6)
+        (rel2par span)
+        (Nucleus
+          (leaf 5)
+          (rel2par span)
+          (text _!What the fuck is this bug ?_!))
+        (Satellite
+          (leaf 6)
+          (rel2par Elaboration)
+          (text _!again again again ._!)))
+      (Satellite
+        (leaf 7)
+        (rel2par Elaboration)
+        (text
+          _!Why this happen now ? ohewf uiqwefh ewkufh weqk fhkweuhf eiuh . this is a simple test file ._!))))
+  (Satellite
+    (span 8 19)
+    (rel2par Elaboration)
+    (Nucleus
+      (span 8 10)
+      (rel2par span)
+      (Nucleus
+        (span 8 9)
+        (rel2par span)
+        (Nucleus
+          (leaf 8)
+          (rel2par span)
+          (text _!I send it to docker feng_!))
+        (Satellite
+          (leaf 9)
+          (rel2par Elaboration)
+          (text _!and it must be parsed ._!)))
+      (Satellite
+        (leaf 10)
+        (rel2par Elaboration)
+        (text _!Maybe a longer file will work ?_!)))
+    (Satellite
+      (span 11 19)
+      (rel2par Elaboration)
+      (Nucleus
+        (span 11 13)
+        (rel2par span)
+        (Nucleus
+          (span 11 12)
+          (rel2par span)
+          (Nucleus
+            (leaf 11)
+            (rel2par span)
+            (text _!What the fuck is this bug ?_!))
+          (Satellite
+            (leaf 12)
+            (rel2par Elaboration)
+            (text _!again again again ._!)))
+        (Satellite
+          (leaf 13)
+          (rel2par Elaboration)
+          (text
+            _!Why this happen now ? ohewf uiqwefh ewkufh weqk fhkweuhf eiuh . this is a simple test file ._!)))
+      (Satellite
+        (span 14 19)
+        (rel2par Elaboration)
+        (Nucleus
+          (span 14 15)
+          (rel2par span)
+          (Nucleus
+            (leaf 14)
+            (rel2par span)
+            (text _!I send it to docker feng_!))
+          (Satellite
+            (leaf 15)
+            (rel2par Elaboration)
+            (text _!and it must be parsed ._!)))
+        (Satellite
+          (span 16 19)
+          (rel2par Elaboration)
+          (Nucleus
+            (leaf 16)
+            (rel2par span)
+            (text _!Maybe a longer file will work ?_!))
+          (Satellite
+            (span 17 19)
+            (rel2par Elaboration)
+            (Nucleus
+              (span 17 18)
+              (rel2par span)
+              (Nucleus
+                (leaf 17)
+                (rel2par span)
+                (text _!What the fuck is this bug ?_!))
+              (Satellite
+                (leaf 18)
+                (rel2par Elaboration)
+                (text _!again again again ._!)))
+            (Satellite
+              (leaf 19)
+              (rel2par Elaboration)
+              (text
+                _!Why this happen now ? ohewf uiqwefh ewkufh weqk fhkweuhf eiuh ._!))))))))

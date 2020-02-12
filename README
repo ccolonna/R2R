@@ -1,0 +1,28 @@
+===
+R2R
+===
+
+RST to RDF
+
+
+run app:
+
+ $ cd <path_to_r2r_dir>/
+ $ python rst-service.py
+
+
+To parse a file do:
+
+curl -X POST -F "input=@myFile" http://localhost:5050 
+
+
+==========
+ATTENTION:
+
+- now you need Feng and Converter services up 
+- app is in virtual environment. To activate it do:
+ $ cd <path_to_r2r_dir>/
+ $ . rst-service/bin/activate
+ 
+
+

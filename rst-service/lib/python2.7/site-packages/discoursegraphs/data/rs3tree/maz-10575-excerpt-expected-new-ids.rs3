@@ -1,0 +1,24 @@
+<rst>
+  <header>
+    <relations>
+      <rel name="interpretation" type="rst" />
+      <rel name="circumstance" type="rst" />
+      <rel name="cause" type="rst" />
+      <rel name="contrast" type="multinuc" />
+    </relations>
+  </header>
+  <body>
+    <segment id="5" parent="7" relname="circumstance">eins</segment>
+    <segment id="9" parent="7" relname="contrast"> zwei</segment>
+    <segment id="13" parent="11" relname="span"> drei</segment>
+    <segment id="15" parent="13" relname="cause"> vier</segment>
+    <segment id="17" parent="3" relname="interpretation"> fuenf</segment>
+
+    <group id="11" type="span" parent="7" relname="contrast" />
+    <group id="7" type="multinuc" parent="3" relname="span" />
+    <group relname="span" type="span" id="3" parent="1"/>
+    <group type="span" id="1"/>
+
+  </body>
+</rst>
+

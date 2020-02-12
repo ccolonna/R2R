@@ -1,0 +1,3 @@
+1) add clean tmp. When parse_request endclean the tmp file she parse. Only its one as it is threaded
+
+2) add the possibility to pass document namespace via post parameters
