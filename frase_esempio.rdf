@@ -1,0 +1,56 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix rst: <https://rst-ontology-ns/> .
+@prefix xml: <http://www.w3.org/XML/1998/namespace> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<https://w3id.org/stlab/fred/rst/data/set_in_post_params/nucleus_1> rst:joint <https://w3id.org/stlab/fred/rst/data/set_in_post_params/nucleus_2> .
+
+<https://w3id.org/stlab/fred/rst/data/set_in_post_params/nucleus_3> rst:sameUnit <https://w3id.org/stlab/fred/rst/data/set_in_post_params/nucleus_4> .
+
+<https://w3id.org/stlab/fred/rst/data/set_in_post_params/nucleus_5> rst:elaboration <https://w3id.org/stlab/fred/rst/data/set_in_post_params/satelite_1> .
+
+<https://w3id.org/stlab/fred/rst/data/set_in_post_params/nucleus_6> rst:elaboration <https://w3id.org/stlab/fred/rst/data/set_in_post_params/satelite_2> ;
+    rst:endOffset "14" ;
+    rst:score "1.0"^^xsd:float ;
+    rst:startOffset "0" ;
+    rst:text "FRED is a tool" .
+
+<https://w3id.org/stlab/fred/rst/data/set_in_post_params/nucleus_7> rst:elaboration <https://w3id.org/stlab/fred/rst/data/set_in_post_params/satelite_3> ;
+    rst:endOffset "247" ;
+    rst:score "0.8"^^xsd:float ;
+    rst:startOffset "110" ;
+    rst:text " The method is based on Combinatory Categorial Grammar, Discourse Representation Theory, Linguistic Frames, and Ontology Design Patterns." .
+
+<https://w3id.org/stlab/fred/rst/data/set_in_post_params/nucleus_8> rst:elaboration <https://w3id.org/stlab/fred/rst/data/set_in_post_params/satelite_4> ;
+    rst:endOffset "297" ;
+    rst:score "0.6"^^xsd:float ;
+    rst:startOffset "247" ;
+    rst:text " Results are enriched with Named Entity Resolution" .
+
+<https://w3id.org/stlab/fred/rst/data/set_in_post_params/nucleus_9> rst:elaboration <https://w3id.org/stlab/fred/rst/data/set_in_post_params/satelite_5> ;
+    rst:endOffset "333" ;
+    rst:score "0.6"^^xsd:float ;
+    rst:startOffset "303" ;
+    rst:text " and Word-Sense Disambiguation" .
+
+<https://w3id.org/stlab/fred/rst/data/set_in_post_params/satellite_2> rst:endOffset "61" ;
+    rst:score "0.4"^^xsd:float ;
+    rst:startOffset "14" ;
+    rst:text " for automatically producing RDF/OWL ontologies" .
+
+<https://w3id.org/stlab/fred/rst/data/set_in_post_params/satellite_4> rst:endOffset "303" ;
+    rst:score "0.2"^^xsd:float ;
+    rst:startOffset "297" ;
+    rst:text " (NER)" .
+
+<https://w3id.org/stlab/fred/rst/data/set_in_post_params/satellite_5> rst:endOffset "340" ;
+    rst:score "0.2"^^xsd:float ;
+    rst:startOffset "333" ;
+    rst:text " (WSD)." .
+
+<https://w3id.org/stlab/fred/rst/data/set_in_post_params/nucleus_2> rst:endOffset "110" ;
+    rst:score "1.0"^^xsd:float ;
+    rst:startOffset "61" ;
+    rst:text " and linked data from natural language sentences." .
+
