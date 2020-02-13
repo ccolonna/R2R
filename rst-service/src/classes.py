@@ -133,10 +133,10 @@ class RSTMiner(object):
                 tn = 'nucleus_' + str(node_hash_map[terminal_node.index])
             else:
                 tn = 'satellite_' + str(node_hash_map[terminal_node.index])
-                g.add( ( doc_ns[tn], rst.startOffset, Literal(str(offset[0])) ) )
-                g.add( ( doc_ns[tn], rst.endOffset, Literal(str(offset[1])) ) )
-                g.add( ( doc_ns[tn], rst.text, Literal(text) ) )
-                g.add( ( doc_ns[tn], rst.score, Literal(terminal_node.get_saliency_score(),datatype=XSD.float ) ) )
+            g.add( ( doc_ns[tn], rst.startOffset, Literal(str(offset[0])) ) )
+            g.add( ( doc_ns[tn], rst.endOffset, Literal(str(offset[1])) ) )
+            g.add( ( doc_ns[tn], rst.text, Literal(text) ) )
+            g.add( ( doc_ns[tn], rst.score, Literal(terminal_node.get_saliency_score(),datatype=XSD.float ) ) )
         
         return g
 
