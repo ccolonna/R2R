@@ -4,16 +4,18 @@ R2R
 
 RST to RDF
 
-
 run app:
 
  $ cd <path_to_r2r_dir>/
  $ python rst-service.py
 
-
 To parse a file do:
 
-curl -X POST -F "input=@myFile" http://localhost:5050 
+curl -X POST -F "input=@<plain_file>" -F "doc=<doc_number> -F "ns=<namespace>" http://localhost:5050 
+
+doc and ns parameters are optional:
+default are doc=1, namespace=https://w3id.org/stlab/fred/rst/data/
+
 
 
 ==========

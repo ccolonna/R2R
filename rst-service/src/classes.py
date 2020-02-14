@@ -12,7 +12,7 @@ import requests
 from rstmarcutree import load_tree as load_rst_file
 from werkzeug.utils import secure_filename
 from rdflib import Graph, URIRef, Literal, XSD
-from rdflib.namespace import Namespace
+from rdflib.namespace import Namespace, RDF
 
 class FileHandler(object):
 
@@ -41,7 +41,13 @@ class FileHandler(object):
         raw_file = ''
         for line in fh:
             raw_file += line
-        return raw_file
+        return raw_file    
+    def remove_file(self, folder, filename):
+        os.remove(os.path.join(folder, filename))
+    def clean_dir(self, folder, filelist):
+        for filename in filelist:
+            self.remove_file(folder, filename)
+    
 
 
 class DataSender(object):
@@ -54,9 +60,7 @@ class DataSender(object):
 class RSTMiner(object):
     """ Take rst tree and produce rdf
     """
-    
-    DEFAULT_NAMESPACE = 'https://w3id.org/stlab/fred/rst/data/'
-    
+
     def __init__(self):
         self.tree = None
 
@@ -66,8 +70,11 @@ class RSTMiner(object):
         self.tree = load_rst_file(filepath)
         return self.tree
     
-    def produce_rdf(self, doc_ns, ns=DEFAULT_NAMESPACE, plain_text=None):
-        """ doc_ns is document namespace added to the base default namespace. A solution? Simply give a number as string.
+    def produce_rdf(self, doc_number, ns, plain_text=None):
+        """ 
+            ns is namespace for parsed document default is: https://w3id.org/stlab/fred/rst/data/
+
+            doc_number is document number added to the base namespace.
             If you parse a corpora set up a counter and give a number for every document
         """
         rst = Namespace('https://rst-ontology-ns/') # rst ontology namespace
@@ -86,7 +93,7 @@ class RSTMiner(object):
         s_count = 1
         n_count = 1
         node_hash_map = {} # a map with node index and its counter    
-        doc_ns = Namespace(ns + doc_ns + '/')
+        doc_ns = Namespace(ns + str(doc_number) + '/')
         g = Graph()
         g.bind('rst', rst)
 
@@ -103,8 +110,10 @@ class RSTMiner(object):
             n_right = 'nucleus_' + str(n_count)
             n_count += 1
 
+            g.add( ( doc_ns[n_right], RDF.type, rst.Nucleus ))
+            g.add( ( doc_ns[n_left] , RDF.type, rst.Nucleus ))
             g.add( ( doc_ns[n_left], rst[self.camelize_relation(relation.relation)], doc_ns[n_right] ) )
-
+            
         # ======= ADD TRIPLE (nucleus relation satellite)
         for relation in self.tree.get_node(filter_func=nuclear_relation_filter):
             # nuc
@@ -118,6 +127,8 @@ class RSTMiner(object):
             s = 'satelite_' + str(s_count)
             s_count += 1
             
+            g.add( ( doc_ns[n], RDF.type, rst.Nucleus ))
+            g.add( ( doc_ns[s], RDF.type, rst.Satellite))
             g.add( (doc_ns[n], rst[self.camelize_relation(relation.relation)], doc_ns[s] ) )
 
         # === ADD TRIPLES (terminal_node offset Literal(tuple))
@@ -131,8 +142,11 @@ class RSTMiner(object):
 
             if terminal_node.status == 'N':
                 tn = 'nucleus_' + str(node_hash_map[terminal_node.index])
+                tnclass = 'Nucleus'
             else:
                 tn = 'satellite_' + str(node_hash_map[terminal_node.index])
+                tnclass = 'Satellite'
+            g.add( (doc_ns[tn], RDF.type, rst[tnclass]))
             g.add( ( doc_ns[tn], rst.startOffset, Literal(str(offset[0])) ) )
             g.add( ( doc_ns[tn], rst.endOffset, Literal(str(offset[1])) ) )
             g.add( ( doc_ns[tn], rst.text, Literal(text) ) )

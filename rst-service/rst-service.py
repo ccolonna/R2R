@@ -18,7 +18,9 @@ TMP_FOLDER = 'tmp'
 CONVERTER_PORT = '5000'
 CONVERTER_ENDPOINT = 'http://localhost:' + CONVERTER_PORT + '/convert/hilda/dis'
 CURL_FILE_KEY = 'input' # this key must be set as filename in CURL request
-
+DOC_NUMBER = 'doc' # this key is the number of the doc to be add to the namespace
+NAMESPACE = 'ns'
+DEFAULT_NAMESPACE = 'https://w3id.org/stlab/fred/rst/data/'
 # == Flask Config == 
 app = Flask(__name__)
 
@@ -30,8 +32,13 @@ def process_request():
     sender = DataSender()
     filehandler = FileHandler()
 
-    # 1) RECEIVE FILE
+    # 1) RECEIVE FILE & PARAMETERS
+
     plain_file = request.files[CURL_FILE_KEY].filename
+    # set rdf parameters
+    doc_n = request.form.get(DOC_NUMBER) if request.form.get(DOC_NUMBER) else 1
+    ns = request.form.get(NAMESPACE) if request.form.get(NAMESPACE) else DEFAULT_NAMESPACE
+    
     filehandler.save_secure_file(request.files[CURL_FILE_KEY], TMP_FOLDER)
     fh = filehandler.open_file(TMP_FOLDER, plain_file)
 
@@ -50,9 +57,12 @@ def process_request():
     # 4) PRODUCE RDF
     rstminer = RSTMiner()
     rstminer.load_tree(TMP_FOLDER + '/' + dis_file)    
-    g = rstminer.produce_rdf('set_in_post_params', plain_text=filehandler.open_file_to_string(TMP_FOLDER, plain_file)) 
+    g = rstminer.produce_rdf(doc_n, ns, plain_text=filehandler.open_file_to_string(TMP_FOLDER, plain_file)) 
 
-    # 5) SEND DATA 
+    # 5) CLEAN TMP DIR
+    filehandler.clean_dir(TMP_FOLDER, [plain_file, hilda_file, dis_file, ])
+
+    # 6) SEND DATA 
     data = ( g.serialize(format='n3') ) 
     return data
 
