@@ -1,0 +1,74 @@
+(Root
+  (span 1 10)
+  (Nucleus
+    (leaf 1)
+    (rel2par span)
+    (text
+      _!John R. Stevens , 49 years old , was named senior executive vice president and chief operating officer , both new positions ._!))
+  (Satellite
+    (span 2 10)
+    (rel2par Elaboration)
+    (Nucleus
+      (leaf 2)
+      (rel2par Joint)
+      (text
+        _!He will continue to report to Donald Pardus , president and chief executive officer ._!))
+    (Nucleus
+      (span 3 10)
+      (rel2par Joint)
+      (Nucleus
+        (leaf 3)
+        (rel2par Joint)
+        (text
+          _!Mr. Stevens was executive vice president of this electric-utility holding company ._!))
+      (Nucleus
+        (span 4 10)
+        (rel2par Joint)
+        (Nucleus
+          (leaf 4)
+          (rel2par Joint)
+          (text
+            _!Arthur A. Hatch , 59 , was named executive vice president of the company ._!))
+        (Nucleus
+          (span 5 10)
+          (rel2par Joint)
+          (Nucleus
+            (leaf 5)
+            (rel2par Joint)
+            (text
+              _!He was previously president of the company 's Eastern Edison Co. unit ._!))
+          (Nucleus
+            (span 6 10)
+            (rel2par Joint)
+            (Nucleus
+              (span 6 7)
+              (rel2par Joint)
+              (Nucleus
+                (leaf 6)
+                (rel2par span)
+                (text _!John D. Carney , 45 , was named_!))
+              (Satellite
+                (leaf 7)
+                (rel2par Enablement)
+                (text
+                  _!to succeed Mr. Hatch as president of Eastern Edison ._!)))
+            (Nucleus
+              (span 8 10)
+              (rel2par Joint)
+              (Nucleus
+                (leaf 8)
+                (rel2par Joint)
+                (text
+                  _!Previously he was vice president of Eastern Edison ._!))
+              (Nucleus
+                (span 9 10)
+                (rel2par Joint)
+                (Nucleus
+                  (leaf 9)
+                  (rel2par Joint)
+                  (text
+                    _!Robert P. Tassinari , 63 , was named senior vice president of Eastern Utilities ._!))
+                (Nucleus
+                  (leaf 10)
+                  (rel2par Joint)
+                  (text _!He was previously vice president ._!))))))))))

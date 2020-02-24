@@ -21,6 +21,9 @@ CURL_FILE_KEY = 'input' # this key must be set as filename in CURL request
 DOC_NUMBER = 'doc' # this key is the number of the doc to be add to the namespace
 NAMESPACE = 'ns'
 DEFAULT_NAMESPACE = 'https://w3id.org/stlab/fred/rst/data/'
+FORMAT = 'ext'
+DEFAULT_FORMAT = 'n3'
+
 # == Flask Config == 
 app = Flask(__name__)
 
@@ -38,6 +41,7 @@ def process_request():
     # set rdf parameters
     doc_n = request.form.get(DOC_NUMBER) if request.form.get(DOC_NUMBER) else 1
     ns = request.form.get(NAMESPACE) if request.form.get(NAMESPACE) else DEFAULT_NAMESPACE
+    ext = request.form.get(FORMAT) if request.form.get(FORMAT) else DEFAULT_FORMAT
     
     filehandler.save_secure_file(request.files[CURL_FILE_KEY], TMP_FOLDER)
     fh = filehandler.open_file(TMP_FOLDER, plain_file)
@@ -63,7 +67,7 @@ def process_request():
     filehandler.clean_dir(TMP_FOLDER, [plain_file, hilda_file, dis_file, ])
 
     # 6) SEND DATA 
-    data = ( g.serialize(format='n3') ) 
+    data = ( g.serialize(format=ext) ) 
     return data
 
 

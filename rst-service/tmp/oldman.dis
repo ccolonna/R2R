@@ -1,0 +1,10 @@
+(Root
+  (span 1 2)
+  (Nucleus
+    (leaf 1)
+    (rel2par span)
+    (text _!There is an old fisherman in Cuba_!))
+  (Satellite
+    (leaf 2)
+    (rel2par Elaboration)
+    (text _!called Santiago ._!)))

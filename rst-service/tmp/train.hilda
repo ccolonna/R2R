@@ -1,0 +1,1 @@
+ParseTree('Elaboration[N][S]', ['There is a Eurocity train on Platform 1 .', ParseTree('Elaboration[N][S]', [ParseTree('Elaboration[N][S]', ['Its destination is Rome .', 'There is another Eurocity on Platform 2 .']), 'Its destination is Zurich .'])])
