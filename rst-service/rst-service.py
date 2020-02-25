@@ -12,22 +12,39 @@ from flask import Flask, request
 # TODO : add dotenv
 # ==== PARAMS =======
 PORT = '5050'
-FENG_PORT = '8000'
-FENG_ENDPOINT = 'http://localhost:' + FENG_PORT + '/parse'
-TMP_FOLDER = 'tmp'
+HOST = '0.0.0.0'
+FENG_HOST = 'feng'
+CONVERTER_HOST = 'conv'
+FENG_PORT = '8080'
+FENG_ENDPOINT = 'http://' + FENG_HOST + ':' + FENG_PORT + '/parse'
+TMP_FOLDER = 'usr/src/rst-service-api/tmp'
 CONVERTER_PORT = '5000'
-CONVERTER_ENDPOINT = 'http://localhost:' + CONVERTER_PORT + '/convert/hilda/dis'
+CONVERTER_ENDPOINT = 'http://' + CONVERTER_HOST + ':' + CONVERTER_PORT + '/convert/hilda/dis'
 CURL_FILE_KEY = 'input' # this key must be set as filename in CURL request
 DOC_NUMBER = 'doc' # this key is the number of the doc to be add to the namespace
 NAMESPACE = 'ns'
 DEFAULT_NAMESPACE = 'https://w3id.org/stlab/fred/rst/data/'
 FORMAT = 'ext'
 DEFAULT_FORMAT = 'n3'
+TEST_FOLDER = 'usr/src/rst-service-api/test'
 
 # == Flask Config == 
 app = Flask(__name__)
 
-# this key must be set as filename in CURL request
+@app.route("/test", methods=["GET"])
+def test_request():
+    return("test passed\n")
+
+@app.route("/converter", methods=["GET"])
+def test_converter():
+    sender = DataSender()
+    filehandler = FileHandler()
+
+    fh = filehandler.open_file(TEST_FOLDER, 'test_short.hilda')
+
+    data = sender.send_file(fh, CONVERTER_ENDPOINT).text
+    fh.close()
+    return data
 
 @app.route("/", methods=["POST"])
 def process_request():
@@ -72,4 +89,4 @@ def process_request():
 
 
 if __name__ == '__main__':
-    app.run(threaded=True, port=PORT)
+    app.run(host=HOST, threaded=True, port=PORT)
