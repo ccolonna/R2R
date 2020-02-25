@@ -1,30 +1,34 @@
-===
-R2R
-===
+===============
+R2R: RST to RDF
+===============
 
-RST to RDF
+R2R roduces RDF annotated according to RST owl semantics at https://github.com/Christian-Nja/rst-ontology
 
-run app:
+The following application is deployed as multi-service docker container.
 
- $ cd <path_to_r2r_dir>/
- $ python rst-service.py
+To install it do:
+
+$ git clone <repository>
+$ cd R2R
+$ docker-compose build
+
+# to launch the service
+
+$ docker-compose up 
+
+*************
+* ATTENTION: You need docker-compose and docker on your machine
+*****
+
+The container exposes a Flask Api listening on localhost:5050
 
 To parse a file do:
 
-curl -X POST -F "input=@<plain_file>" -F "doc=<doc_number> -F "ns=<namespace>" http://localhost:5050 
+curl -X POST -F "input=@<plain_file>" -F "doc=<doc_number> -F "ns=<namespace>" -F "ext=xml" http://localhost:5050 
 
-doc and ns parameters are optional:
-default are doc=1, namespace=https://w3id.org/stlab/fred/rst/data/
-
-
-
-==========
-ATTENTION:
-
-- now you need Feng and Converter services up 
-- app is in virtual environment. To activate it do:
- $ cd <path_to_r2r_dir>/
- $ . rst-service/bin/activate
- 
+OPTIONAL PARAMETERS:
+	doc : the doc parsed number to be append to namespace (use this with a counter if your parsing a corpora). [default = 1]
+	ns : namespace. [default = https://w3id.org/stlab/fred/rst/data/]
+	ext : rdf serialization format [default=n3]
 
 
