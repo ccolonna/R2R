@@ -6,6 +6,7 @@ Click==7.0
 decorator==4.4.1
 discoursegraphs==0.4.5
 Flask==1.1.1
+Flask-Cors==3.0.8
 future==0.18.2
 futures==3.3.0
 idna==2.8

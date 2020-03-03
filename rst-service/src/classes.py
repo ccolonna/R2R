@@ -164,5 +164,37 @@ class RSTMiner(object):
             relation = tmp_relation[:1].lower() + tmp_relation[1:]
         return relation
 
+    def extract_saliency(self, g):
+        """ Send edus with saliency score and an heat-map blue-red color. Serialized as json.
+        """
+        def get_heat_color(value):
+            """ Function accepts a value in (0,1] and returns an heat color according
+                to a binary gradient blue-red (blue : 0 , red : 1) 
+            """
+            aR, aG, aB = (0, 0, 255)
+            bR, bG, bB = (255, 0, 0)
+            red = ((bR - aR) * value) + aR
+            green = ((bG - aG) * value) + aG
+            blue = ((bB - aB) * value) + aB
+            return (red, green, blue)
+
+        QUERY = """ 
+            SELECT DISTINCT ?o ?t ?s
+            WHERE {
+                ?n rst:startOffset ?o .
+                ?n rst:text ?t .
+                ?n rst:score ?s .
+            }
+        """
+        data = g.query(QUERY)
+        data2send = {}
+        fltr = lambda t : int(t.o)
+        edu_counter = 1
+        for row in sorted(data, key=fltr):
+            data2send[edu_counter] = { 'text' : row.t , 'score' : row.s , 'heat_color' : get_heat_color(float(row.s))}
+            edu_counter += 1
+        return data2send
+
+    
 
 
