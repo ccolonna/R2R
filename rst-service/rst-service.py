@@ -6,7 +6,6 @@ import os
 
 from src.classes import DataSender, FileHandler, RSTMiner
 
-from rdflib import Literal
 from flask import Flask, request
 from flask_cors import CORS, cross_origin
 

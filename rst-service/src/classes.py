@@ -9,6 +9,7 @@ import os
 from edualigner import RSTEDUAligner
 
 import requests
+from nltk.tokenize import word_tokenize
 from rstmarcutree import load_tree as load_rst_file
 from werkzeug.utils import secure_filename
 from rdflib import Graph, URIRef, Literal, XSD
@@ -191,7 +192,7 @@ class RSTMiner(object):
         fltr = lambda t : int(t.o)
         edu_counter = 1
         for row in sorted(data, key=fltr):
-            data2send[edu_counter] = { 'text' : row.t , 'score' : row.s , 'heat_color' : get_heat_color(float(row.s))}
+            data2send[edu_counter] = { 'text' : word_tokenize(row.t) , 'score' : row.s , 'heat_color' : get_heat_color(float(row.s))}
             edu_counter += 1
         return data2send
 
