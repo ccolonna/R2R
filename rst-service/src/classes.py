@@ -188,13 +188,11 @@ class RSTMiner(object):
             }
         """
         data = g.query(QUERY)
-        data2send = {}
+        data2send = []
         fltr = lambda t : int(t.o)
-        edu_counter = 1
         for row in sorted(data, key=fltr):
-            data2send[edu_counter] = { 'text' : word_tokenize(row.t) , 'score' : row.s , 'heat_color' : get_heat_color(float(row.s))}
-            edu_counter += 1
-        return data2send
+            data2send.append({ 'text' : word_tokenize(row.t) , 'score' : row.s , 'heat_color' : get_heat_color(float(row.s))})
+        return { 'edus' : data2send }
 
     
 
