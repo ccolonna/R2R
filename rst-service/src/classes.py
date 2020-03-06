@@ -28,28 +28,41 @@ class FileHandler(object):
         """
         fh.save(os.path.join(folder, secure_filename(fh.filename)))
 
+
     def save_file(self, string, folder, filename):
         """ Save file. 
         """ 
         with open(os.path.join(folder, filename), 'w') as fh:
             fh.write("{}".format(string))
+        fh.close()
     
     def set_extension(self, filename, extension):
         f_root = filename.split(".")[0]
         return f_root + '.' + extension
-    
+
     def open_file_to_string(self, folder, filename):
         fh = open(os.path.join(folder, filename), 'r')
         raw_file = ''
         for line in fh:
             raw_file += line
         return raw_file    
+
     def remove_file(self, folder, filename):
         os.remove(os.path.join(folder, filename))
     def clean_dir(self, folder, filelist):
         for filename in filelist:
             self.remove_file(folder, filename)
     
+    def parse_request_text(self, request, filekey, folder):
+        """ Check if input is text of a http request is text or file and parse it to a tmp plain_file
+        """
+        if request.files.get(filekey):
+            plain_file = request.files[filekey].filename
+            self.save_secure_file(request.files[filekey], folder)
+        elif request.form.get(filekey):
+            plain_file = "plain.txt"
+            self.save_file(request.form.get(filekey), folder, "plain.txt")
+        return plain_file
 
 
 class DataSender(object):
@@ -59,12 +72,30 @@ class DataSender(object):
     def send_file(self, fh, url):
         return requests.post(url, files={'input': fh})
 
+    def call_rst_service(self, endpoint, in_file, out_file_ext, folder):
+        filehandler = FileHandler()
+        fh = filehandler.open_file(folder, in_file)
+        data = self.send_file(fh, endpoint).text
+        out_file = filehandler.set_extension(in_file, out_file_ext)
+        filehandler.save_file(data, folder, out_file)
+        return out_file
+
+class RDFParams(object):
+    """ RDF parameters for RST model
+    """
+    DOC_NUMBER = 'doc' # this key is the number of the doc to be add to the namespace
+    NAMESPACE = 'ns'
+    DEFAULT_NAMESPACE = 'https://w3id.org/stlab/fred/rst/data/'
+    FORMAT = 'ext'
+    DEFAULT_FORMAT = 'n3'
+    def __init__(self, request_form):
+        self.doc_n = request_form.get(self.DOC_NUMBER) if request_form.get(self.DOC_NUMBER) else 1
+        self.ns = request_form.get(self.NAMESPACE) if request_form.get(self.NAMESPACE) else self.DEFAULT_NAMESPACE
+        self.serialization = request_form.get(self.FORMAT) if request_form.get(self.FORMAT) else self.DEFAULT_FORMAT
+
 class RSTMiner(object):
     """ Take rst tree and produce rdf
     """
-
-    def __init__(self):
-        self.tree = None
 
     def load_tree(self, filepath):
         """ Bind internal tree attribute to tree
@@ -72,13 +103,15 @@ class RSTMiner(object):
         self.tree = load_rst_file(filepath)
         return self.tree
     
-    def produce_rdf(self, doc_number, ns, plain_text=None):
+    def produce_rdf(self, doc_number, ns, dis_file_path, plain_text=None):
         """ 
             ns is namespace for parsed document default is: https://w3id.org/stlab/fred/rst/data/
 
             doc_number is document number added to the base namespace.
             If you parse a corpora set up a counter and give a number for every document
         """
+        self.tree = self.load_tree(dis_file_path)
+
         rst = Namespace('https://rst-ontology-ns/') # rst ontology namespace
         
         ### LAMBDA FILTERS
@@ -196,27 +229,34 @@ class RSTMiner(object):
         return { 'edus' : data2send }
 
 
-class FREDMiner(object):
-    """ Handles FRED semantic graph
-    """
+class GlobalStorage(object):
 
     def __init__(self):
-        self.graph = graph
+        self.raw_text = None
+        self.rdf_params = None
+        self.plain_file = None
+
+    def set_raw_text(self, raw_text):
+        self.raw_text = raw_text
+    def get_raw_text(self):
+        return self.raw_text
+    def set_rdf_params(self, rdf_params):
+        self.rdf_params = rdf_params
+    def get_rdf_params(self):
+        return self.rdf_params    
+    def set_plain_file(self, plain_file):
+        self.plain_file = plain_file
+    def get_plain_file(self):
+        return self.plain_file
+        
+
+class BridgeGraph(Graph):
+
+    def merge(self, rst_data, fred_data, in_ext):
+        Q1 = """ SELECT ?offset ?denoted WHERE { ?offset a ns4:PointerRange . }
+             """
+        self.parse(data = rst_data, format=in_ext)
+        self.parse(data = fred_data, format=in_ext)
     
-    def parse_text(self, text):
-        fredDialer = FREDDialer()
-        g = fredDialer.dial(text)
-
-class GraphMerger(object):
-
-    def __init__(self, fred_g, rst_tree):
-        self.g = Graph()
-        g.parse( ( fred_g.serialize(format='turtle') ) )
-        g.parse( ( rst_tree.serialize(format='turtle') ) )
-    
-    def getGraph(self):
-        return self.g
-
-
 
 

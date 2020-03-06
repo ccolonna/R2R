@@ -4,7 +4,7 @@
 
 import os
 
-from src.classes import DataSender, FileHandler, RSTMiner, FREDDialer, GraphMerger
+from src.classes import DataSender, FileHandler, RSTMiner, FREDDialer, RDFParams, GlobalStorage, BridgeGraph
 
 
 from flask import Flask, request
@@ -19,6 +19,7 @@ CONVERTER_HOST = 'conv'
 FENG_PORT = '8080'
 FENG_ENDPOINT = 'http://' + FENG_HOST + ':' + FENG_PORT + '/parse'
 TMP_FOLDER = 'usr/src/rst-service-api/tmp'
+#TMP_FOLDER = 'tmp'
 CONVERTER_PORT = '5000'
 CONVERTER_ENDPOINT = 'http://' + CONVERTER_HOST + ':' + CONVERTER_PORT + '/convert/hilda/dis'
 CURL_FILE_KEY = 'input' # this key must be set as filename in CURL request
@@ -39,95 +40,64 @@ app.config['CORS_HEADERS'] = 'Content-type'
 sender = DataSender()
 rstminer = RSTMiner()
 filehandler = FileHandler()
+storage = GlobalStorage()
 
 # ============ API ==============
 
-@app.route("/", methods=["POST"])
-def rdf():
-    """ Base API: returns pure rdf graph
+@app.route("/rst", methods=["POST"])
+def rst():
+    """ Base API: returns pure RDF graph according to RST semantics for a text
     """
-    g = process_request()
-    return (g.serialize (format=set_rdf_serialization()) )
+    set_rst_params()
+    g = produce_rdf()
+    return (g.serialize (format=storage.get_rdf_params().serialization ))
 
 @app.route("/saliency", methods=["POST"])
 @cross_origin()
 def saliency():
-    """ Returns JSON : { '<edu_numb>' : { 'text' : '<edu words>', 'score' : '<edu_score>', 'heat_color': '<heat_map_color>'} }
+    """ Returns JSON : [ { 'text' : '<edu words>', 'score' : '<edu_score>', 'heat_color': '<heat_map_color>'} ... ]
+        list of edus
     """ 
-    g = process_request()
+    set_rst_params()
+    g = produce_rdf()
     return rstminer.extract_saliency(g)
+
+@app.route("/bridge", methods=["POST"])
+@cross_origin()
+def merge():
+    set_rst_params()
+    rst = produce_rdf().serialize(format=storage.get_rdf_params().serialization)
+    fred = produce_fred().serialize(format=storage.get_rdf_params().serialization)
+    g = BridgeGraph()
+    g.merge(rst, fred, storage.get_rdf_params().serialization)
+    return (g.serialize(format='n3'))
 
 # ========== FUNCTIONS ============
 
-def process_request():
-    # 1) RECEIVE DATA 
-    plain_file = parse_text()
-    # 2) SET RDF PARAMS
-    doc_n, ns = set_rdf_params()
-    # 3) PRODUCE RDF
-    g = plain_to_rdf(doc_n, ns, plain_file)
-    return g
-
-def parse_text():
-    """ Check if input is text or file and parse it to a tmp plain_file
-    """
-    if request.files.get(CURL_FILE_KEY):
-        plain_file = request.files[CURL_FILE_KEY].filename
-        filehandler.save_secure_file(request.files[CURL_FILE_KEY], TMP_FOLDER)
-    elif request.form.get(CURL_FILE_KEY):
-        plain_file = "plain.txt"
-        filehandler.save_file(request.form.get(CURL_FILE_KEY), TMP_FOLDER, "plain.txt")
-    return plain_file
-
-def set_rdf_serialization():
-    """ Return rdf serialization as given by api call. Default : n3
-    """
-    return request.form.get(FORMAT) if request.form.get(FORMAT) else DEFAULT_FORMAT
-
-def set_rdf_params():
-    """ Set document namespace and global namespace
-    """
-    doc_n = request.form.get(DOC_NUMBER) if request.form.get(DOC_NUMBER) else 1
-    ns = request.form.get(NAMESPACE) if request.form.get(NAMESPACE) else DEFAULT_NAMESPACE
-    return doc_n, ns
-
-def plain_to_rdf(doc_n, ns, plain_file):
+def set_rst_params():
+    # 1) SET PARAMS
+    storage.set_rdf_params(RDFParams(request.form))
+    storage.set_plain_file(filehandler.parse_request_text(request, CURL_FILE_KEY, TMP_FOLDER))
+    storage.set_raw_text(filehandler.open_file_to_string(TMP_FOLDER, storage.get_plain_file()))
+    
+def produce_rdf():
     """ Function to wrap all the pipe to get rdf from plain file
     """
     # 2) SEND TO FENG
-    hilda_file = call_service(FENG_ENDPOINT, plain_file, 'hilda')
-
+    hilda_file = sender.call_rst_service(FENG_ENDPOINT, storage.get_plain_file(), 'hilda', TMP_FOLDER)
     # 3) SEND TO CONVERTER
-    dis_file = call_service(CONVERTER_ENDPOINT, hilda_file, 'dis')
-
+    dis_file = sender.call_rst_service(CONVERTER_ENDPOINT, hilda_file, 'dis', TMP_FOLDER)
     # 4) PRODUCE RDF
-    g = rst_to_rdf(dis_file, plain_file, doc_n, ns) 
-
+    g = rstminer.produce_rdf(storage.get_rdf_params().doc_n, storage.get_rdf_params().ns, dis_file_path=TMP_FOLDER + '/' + dis_file, plain_text=storage.get_raw_text())    
     # 5) CLEAN TMP DIR
-    filehandler.clean_dir(TMP_FOLDER, [plain_file, hilda_file, dis_file, ])
-
+    filehandler.clean_dir(TMP_FOLDER, [storage.get_plain_file(), hilda_file, dis_file, ])
     return g
 
-
-def salient_annotated_data(g):
-    """ Queries the graph to get edus with scores and jsonify data
+def produce_fred():
+    """ You need to parse the input text to raw_text before and store it !
     """
-    return rstminer.extract_saliency(g)   
-
-def call_service(endpoint, in_file, out_file_ext):
-    """ Function to call microservices
-    """
-    fh = filehandler.open_file(TMP_FOLDER, in_file)
-    data = sender.send_file(fh, endpoint).text
-    out_file = filehandler.set_extension(in_file, out_file_ext)
-    filehandler.save_file(data, TMP_FOLDER, out_file)
-    return out_file
-
-def rst_to_rdf(dis_file, plain_file, doc_n, ns):
-    """ Function to produce rdf graph from rst tree
-    """
-    rstminer.load_tree(TMP_FOLDER + '/' + dis_file)
-    g = rstminer.produce_rdf(doc_n, ns, plain_text=filehandler.open_file_to_string(TMP_FOLDER, plain_file))    
+    fredDialer = FREDDialer()
+    g = fredDialer.dial(storage.get_raw_text())
     return g
 
 # ======== TEST API ===============
@@ -138,11 +108,9 @@ def test_request():
 
 @app.route("/fred", methods=["POST"])
 @cross_origin()
-def test_fred():
-    text = filehandler.open_file_to_string(TMP_FOLDER, parse_text())
-    fredDialer = FREDDialer()
-    g = fredDialer.dial(text)
-    return ( g.serialize(format='turtle') ) 
+def fred():
+    return test_fred()
+
 
 if __name__ == '__main__':
     app.run(host=HOST, threaded=True, port=PORT, debug=DEBUG)

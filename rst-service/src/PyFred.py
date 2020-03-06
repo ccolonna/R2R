@@ -1,5 +1,5 @@
 import conf
-import urllib.request
+import requests
 import rdflib
 
 class FREDParameters:
@@ -54,17 +54,11 @@ class FREDDialer:
     def dial(self, text, fredParameters=FREDParameters()):
         params = {'text': text, 
              'namespace': fredParameters.getNamespace(),
-             'wsd': fredParameters.isWSD()}
-        
-       	params = urllib.parse.urlencode(params)
-        
-        print(self.__fred_endpoint % params)
+             'wsd': fredParameters.isWSD()}        
         graph=rdflib.Graph()
-        request = urllib.request.Request(self.__fred_endpoint % params, headers={"Accept": self.__requestMimeType})
+        response = requests.get(self.__fred_endpoint, params=params, headers={"Accept": self.__requestMimeType})
         try:
-            response = urllib.request.urlopen(request)
-            output = response.read()
-            
+            output = response.text
             graph.parse(data = output, format=self.__requestMimeType)
         except:
             print("The graph produced is empty due to an exception occurred with FRED.")
