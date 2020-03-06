@@ -7,6 +7,7 @@
 import os
 
 from edualigner import RSTEDUAligner
+from PyFred import FREDDialer
 
 import requests
 from nltk.tokenize import word_tokenize
@@ -194,6 +195,28 @@ class RSTMiner(object):
             data2send.append({ 'text' : word_tokenize(row.t) , 'score' : row.s , 'heat_color' : get_heat_color(float(row.s))})
         return { 'edus' : data2send }
 
+
+class FREDMiner(object):
+    """ Handles FRED semantic graph
+    """
+
+    def __init__(self):
+        self.graph = graph
     
+    def parse_text(self, text):
+        fredDialer = FREDDialer()
+        g = fredDialer.dial(text)
+
+class GraphMerger(object):
+
+    def __init__(self, fred_g, rst_tree):
+        self.g = Graph()
+        g.parse( ( fred_g.serialize(format='turtle') ) )
+        g.parse( ( rst_tree.serialize(format='turtle') ) )
+    
+    def getGraph(self):
+        return self.g
+
+
 
 

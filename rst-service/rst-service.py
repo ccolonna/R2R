@@ -4,7 +4,8 @@
 
 import os
 
-from src.classes import DataSender, FileHandler, RSTMiner
+from src.classes import DataSender, FileHandler, RSTMiner, FREDDialer, GraphMerger
+
 
 from flask import Flask, request
 from flask_cors import CORS, cross_origin
@@ -134,6 +135,14 @@ def rst_to_rdf(dis_file, plain_file, doc_n, ns):
 @cross_origin()
 def test_request():
     return("test passed\n")
+
+@app.route("/fred", methods=["POST"])
+@cross_origin()
+def test_fred():
+    text = filehandler.open_file_to_string(TMP_FOLDER, parse_text())
+    fredDialer = FREDDialer()
+    g = fredDialer.dial(text)
+    return ( g.serialize(format='turtle') ) 
 
 if __name__ == '__main__':
     app.run(host=HOST, threaded=True, port=PORT, debug=DEBUG)
