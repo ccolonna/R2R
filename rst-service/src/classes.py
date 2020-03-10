@@ -16,12 +16,19 @@ from werkzeug.utils import secure_filename
 from rdflib import Graph, URIRef, Literal, XSD
 from rdflib.namespace import Namespace, RDF
 
+# TODO :
+# this namespace is used by two classes
+# you need to take it from the graph cause
+# g.add() doesn't see it if you didn't declare it
+rst = Namespace('https://rst-ontology-ns/') # rst ontology namespace
+
+
 class FileHandler(object):
 
-    def open_file(self, folder, filename):
+    def open_file(self, folder, filename, m='rb'):
         """ Open file in binary mode. You need this to send it via HTTP POST request.
         """
-        return open(os.path.join(folder, filename), 'rb')
+        return open(os.path.join(folder, filename), m)
 
     def save_secure_file(self, fh, folder):
         """ Save file received by flask app. Secure it here as arrived from outside.
@@ -112,7 +119,6 @@ class RSTMiner(object):
         """
         self.tree = self.load_tree(dis_file_path)
 
-        rst = Namespace('https://rst-ontology-ns/') # rst ontology namespace
         
         ### LAMBDA FILTERS
         multinuc_relation_filter = lambda node : node if node.schema == 'MULTINUC' else None
@@ -248,15 +254,53 @@ class GlobalStorage(object):
         self.plain_file = plain_file
     def get_plain_file(self):
         return self.plain_file
-        
+    
 
 class BridgeGraph(Graph):
 
     def merge(self, rst_data, fred_data, in_ext):
-        Q1 = """ SELECT ?offset ?denoted WHERE { ?offset a ns4:PointerRange . }
-             """
         self.parse(data = rst_data, format=in_ext)
         self.parse(data = fred_data, format=in_ext)
-    
+        self.__bridge()
 
+    def __get_fred_offset(self, s):
+        return s.split('_')[1]
 
+    def __get_denoted_and_start_offset(self):
+        """ In a FRED graph we extract the tuple of all denoteds and relative position
+            [(denoted_1, start),(denoted_2, start),...  ] 
+        """
+
+        query = "PREFIX earmark: <http://www.essepuntato.it/2008/12/earmark#>" \
+                "PREFIX semiotics: <http://ontologydesignpatterns.org/cp/owl/semiotics.owl#>" \
+                "SELECT ?denoted ?offset WHERE { ?offset a earmark:PointerRange ; semiotics:denotes ?denoted . } "
+        qres = self.query(query)
+
+        res = []
+        for row in qres:
+            res.append((row[0], self.__get_fred_offset(row[1].strip()))) # denoted, startOffset
+
+        return res
+
+    def __get_denoted_edu(self, denoted_tuple):
+        """ Extract the edu (nucleus or satellite), the denoted belongs to. 
+            And creates a relation of membership.
+            Example:
+            N1 |  i'm hungry , | S1 so i eat an apple.
+            apple belongsTo S1
+        """
+        query = "PREFIX rst: <https://rst-ontology-ns/>" \
+                " SELECT  ?textspan WHERE { ?textspan rst:startOffset ?start ; rst:endOffset ?end . FILTER (?start <= ?denoted_start && ?denoted_start < ?end) }"
+        qres = self.query(query, initBindings={"?denoted_start":Literal(denoted_tuple[1])})
+
+        for row in qres:
+            # ============== add membership triple ==================
+            self.add( (denoted_tuple[0], rst['belongsTo'], row[0] )) 
+
+    def __bridge(self):
+        """ Add a membership relation between R2R edu's and FRED objects and facts
+        """ 
+        denoteds = self.__get_denoted_and_start_offset()
+
+        for d in denoteds:
+            self.__get_denoted_edu(d)

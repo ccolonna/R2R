@@ -3,9 +3,7 @@
 # author: Christian Colonna
 
 import os
-
 from src.classes import DataSender, FileHandler, RSTMiner, FREDDialer, RDFParams, GlobalStorage, BridgeGraph
-
 
 from flask import Flask, request
 from flask_cors import CORS, cross_origin
@@ -70,7 +68,9 @@ def merge():
     fred = produce_fred().serialize(format=storage.get_rdf_params().serialization)
     g = BridgeGraph()
     g.merge(rst, fred, storage.get_rdf_params().serialization)
-    return (g.serialize(format='n3'))
+    return (g.serialize(format=storage.get_rdf_params().serialization))
+
+
 
 # ========== FUNCTIONS ============
 
