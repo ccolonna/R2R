@@ -164,11 +164,11 @@ class RSTMiner(object):
                     ?event rst:belongsTo ?edu ;
                             rdf:type ?class ;
                             vnrole:Agent ?agent ;
-                            vnrole:Patient ?patient .
+                            ?objectPredicate ?patient .
                     ?edu rst:score ?s .
                     ?class rdfs:subClassOf dul:Event .
 
-                    FILTER ( ?s >=  ?saliency_threshold )
+                    FILTER ( ?s >=  ?saliency_threshold && ?objectPredicate in (vnrole:Patient , vnrole:Theme) )
                 }
                 """
         data = g.query(query, initBindings={"?saliency_threshold":Literal(saliency_treshold, datatype=XSD.float)})

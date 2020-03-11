@@ -4,7 +4,7 @@
 # 
 # helpers for rst-service api
 
-import os
+import os, io
 
 import requests
 from werkzeug.utils import secure_filename
@@ -16,6 +16,9 @@ class FileHandler(object):
         """ Open file in binary mode. You need this to send it via HTTP POST request.
         """
         return open(os.path.join(folder, filename), m)
+
+    def open_encoded_file(self, folder, filename, encoding="utf-8"):
+        return io.open(os.path.join(folder, filename), 'r', encoding=encoding)
 
     def save_secure_file(self, fh, folder):
         """ Save file received by flask app. Secure it here as arrived from outside.
@@ -35,7 +38,7 @@ class FileHandler(object):
         return f_root + '.' + extension
 
     def open_file_to_string(self, folder, filename):
-        fh = open(os.path.join(folder, filename), 'r')
+        fh = self.open_encoded_file(folder, filename)
         raw_file = ''
         for line in fh:
             raw_file += line

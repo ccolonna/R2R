@@ -3,31 +3,14 @@
 # author: Christian Colonna
 
 import os
-from src.classes import DataSender, FileHandler, RSTMiner, FREDDialer, RDFParams, GlobalStorage, BridgeGraph
+from src.api import RDFParams, GlobalStorage
+from src.helpers import FileHandler, DataSender
+from src.rst import RSTMiner, BridgeGraph, FREDDialer
+from src.env import *
 
 from flask import Flask, request
 from flask_cors import CORS, cross_origin
 
-# TODO : add dotenv
-# ==== PARAMS =======
-PORT = '5050'
-HOST = '0.0.0.0'
-FENG_HOST = 'feng'
-CONVERTER_HOST = 'conv'
-FENG_PORT = '8080'
-FENG_ENDPOINT = 'http://' + FENG_HOST + ':' + FENG_PORT + '/parse'
-TMP_FOLDER = 'usr/src/rst-service-api/tmp'
-#TMP_FOLDER = 'tmp'
-CONVERTER_PORT = '5000'
-CONVERTER_ENDPOINT = 'http://' + CONVERTER_HOST + ':' + CONVERTER_PORT + '/convert/hilda/dis'
-CURL_FILE_KEY = 'input' # this key must be set as filename in CURL request
-DOC_NUMBER = 'doc' # this key is the number of the doc to be add to the namespace
-NAMESPACE = 'ns'
-DEFAULT_NAMESPACE = 'https://w3id.org/stlab/fred/rst/data/'
-FORMAT = 'ext'
-DEFAULT_FORMAT = 'n3'
-TEST_FOLDER = 'usr/src/rst-service-api/test'
-DEBUG = True
 
 # == Flask Config == 
 app = Flask(__name__)
@@ -71,9 +54,17 @@ def merge():
 @cross_origin()
 def facts():
     set_rst_params()
-    SALIENCY_TRESHOLD = 0
     g = produce_bridge_graph()
-    return rstminer.extract_facts(g, SALIENCY_TRESHOLD)
+    return rstminer.extract_facts(g, storage.get_rdf_params().treshold)
+
+@app.route("/fred", methods=["POST"])
+@cross_origin()
+def fred():
+    """ Base API: returns pure RDF graph according to FRED semantics for a text
+    """
+    set_rst_params()
+    g = produce_fred()
+    return (g.serialize(format=storage.get_rdf_params().serialization))
 
 # ========== FUNCTIONS ============
 
@@ -115,11 +106,8 @@ def produce_bridge_graph():
 def test_request():
     return("test passed\n")
 
-@app.route("/fred", methods=["POST"])
-@cross_origin()
-def fred():
-    return test_fred()
 
+# ====== RUN API =======
 
 if __name__ == '__main__':
     app.run(host=HOST, threaded=True, port=PORT, debug=DEBUG)
