@@ -1,0 +1,19 @@
+# ==== PARAMS =======
+PORT = '5050'
+HOST = '0.0.0.0'
+FENG_HOST = 'feng'
+CONVERTER_HOST = 'conv'
+FENG_PORT = '8080'
+FENG_ENDPOINT = 'http://' + FENG_HOST + ':' + FENG_PORT + '/parse'
+TMP_FOLDER = 'usr/src/rst-service-api/tmp'
+#TMP_FOLDER = 'tmp'
+CONVERTER_PORT = '5000'
+CONVERTER_ENDPOINT = 'http://' + CONVERTER_HOST + ':' + CONVERTER_PORT + '/convert/hilda/dis'
+CURL_FILE_KEY = 'input' # this key must be set as filename in CURL request
+DOC_NUMBER = 'doc' # this key is the number of the doc to be add to the namespace
+NAMESPACE = 'ns'
+DEFAULT_NAMESPACE = 'https://w3id.org/stlab/fred/rst/data/'
+FORMAT = 'ext'
+DEFAULT_FORMAT = 'n3'
+TEST_FOLDER = 'usr/src/rst-service-api/test'
+DEBUG = True
