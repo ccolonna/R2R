@@ -1,0 +1,21 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix rst: <https://rst-ontology-ns/> .
+@prefix xml: <http://www.w3.org/XML/1998/namespace> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<https://w3id.org/stlab/fred/rst/data/1/nucleus_1> a rst:Nucleus ;
+    rst:elaboration <https://w3id.org/stlab/fred/rst/data/1/satelite_1> ;
+    rst:endOffset "33" ;
+    rst:score "1.0"^^xsd:float ;
+    rst:startOffset "0" ;
+    rst:text "There is an old fisherman in Cuba" .
+
+<https://w3id.org/stlab/fred/rst/data/1/satellite_1> a rst:Satellite ;
+    rst:endOffset "50" ;
+    rst:score "0.5"^^xsd:float ;
+    rst:startOffset "33" ;
+    rst:text " called Santiago." .
+
+<https://w3id.org/stlab/fred/rst/data/1/satelite_1> a rst:Satellite .
+

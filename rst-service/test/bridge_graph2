@@ -1,0 +1,144 @@
+@prefix ns1: <http://ontologydesignpatterns.org/cp/owl/semiotics.owl#> .
+@prefix ns10: <http://www.ontologydesignpatterns.org/ont/boxer/boxer.owl#> .
+@prefix ns2: <http://www.ontologydesignpatterns.org/ont/fred/pos.owl#> .
+@prefix ns3: <http://www.ontologydesignpatterns.org/ont/dul/DUL.owl#> .
+@prefix ns4: <http://www.essepuntato.it/2008/12/earmark#> .
+@prefix ns5: <http://www.w3.org/2002/07/owl#> .
+@prefix ns6: <http://www.ontologydesignpatterns.org/ont/fred/quantifiers.owl#> .
+@prefix ns7: <http://www.w3.org/2006/03/wn/wn30/schema/> .
+@prefix ns8: <http://www.ontologydesignpatterns.org/ont/cnlp/coref.owl#> .
+@prefix ns9: <http://www.ontologydesignpatterns.org/ont/vn/abox/role/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix rst: <https://rst-ontology-ns/> .
+@prefix xml: <http://www.w3.org/XML/1998/namespace> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+ns1:denotes a ns5:ObjectProperty .
+
+ns1:hasInterpretant a ns5:ObjectProperty .
+
+ns4:begins a ns5:ObjectProperty .
+
+ns4:ends a ns5:ObjectProperty .
+
+ns4:hasContent a ns5:ObjectProperty .
+
+ns4:refersTo a ns5:ObjectProperty .
+
+ns10:possibleType a ns5:ObjectProperty .
+
+ns8:coref a ns5:ObjectProperty .
+
+ns3:hasQuality a ns5:ObjectProperty .
+
+<http://www.ontologydesignpatterns.org/ont/fred/offset_0_5_Marco> a ns4:PointerRange ;
+    rdfs:label "Marco"^^xsd:string ;
+    ns1:denotes <http://www.ontologydesignpatterns.org/ont/fred/Marco> ;
+    ns4:begins "0"^^xsd:nonNegativeInteger ;
+    ns4:ends "5"^^xsd:nonNegativeInteger ;
+    ns4:refersTo <http://www.ontologydesignpatterns.org/ont/fred/docuverse> ;
+    ns2:pennpos ns2:NNP .
+
+<http://www.ontologydesignpatterns.org/ont/fred/offset_13_18_apple> a ns4:PointerRange ;
+    rdfs:label "apple"^^xsd:string ;
+    ns1:denotes <http://www.ontologydesignpatterns.org/ont/fred/apple_1> ;
+    ns1:hasInterpretant <http://www.ontologydesignpatterns.org/ont/fred/Apple> ;
+    ns4:begins "13"^^xsd:nonNegativeInteger ;
+    ns4:ends "18"^^xsd:nonNegativeInteger ;
+    ns4:refersTo <http://www.ontologydesignpatterns.org/ont/fred/docuverse> ;
+    ns2:pennpos ns2:NN .
+
+<http://www.ontologydesignpatterns.org/ont/fred/offset_20_29_The+apple> ns8:coref <http://www.ontologydesignpatterns.org/ont/fred/apple_1> .
+
+<http://www.ontologydesignpatterns.org/ont/fred/offset_34_40_really> a ns4:PointerRange ;
+    rdfs:label "really"^^xsd:string ;
+    ns1:hasInterpretant <http://www.ontologydesignpatterns.org/ont/fred/Really> ;
+    ns4:begins "34"^^xsd:nonNegativeInteger ;
+    ns4:ends "40"^^xsd:nonNegativeInteger ;
+    ns4:refersTo <http://www.ontologydesignpatterns.org/ont/fred/docuverse> ;
+    ns2:pennpos ns2:RB .
+
+<http://www.ontologydesignpatterns.org/ont/fred/offset_41_46_tasty> a ns4:PointerRange ;
+    rdfs:label "tasty"^^xsd:string ;
+    ns1:hasInterpretant <http://www.ontologydesignpatterns.org/ont/fred/Tasty> ;
+    ns4:begins "41"^^xsd:nonNegativeInteger ;
+    ns4:ends "46"^^xsd:nonNegativeInteger ;
+    ns4:refersTo <http://www.ontologydesignpatterns.org/ont/fred/docuverse> ;
+    ns2:pennpos ns2:JJ .
+
+<http://www.ontologydesignpatterns.org/ont/fred/offset_6_9_eat> a ns4:PointerRange ;
+    rdfs:label "eat"^^xsd:string ;
+    ns1:denotes <http://www.ontologydesignpatterns.org/ont/fred/eat_1> ;
+    ns1:hasInterpretant <http://www.ontologydesignpatterns.org/ont/fred/Eat> ;
+    ns4:begins "6"^^xsd:nonNegativeInteger ;
+    ns4:ends "9"^^xsd:nonNegativeInteger ;
+    ns4:refersTo <http://www.ontologydesignpatterns.org/ont/fred/docuverse> ;
+    ns2:pennpos ns2:VB .
+
+ns2:boxerpos a ns5:ObjectProperty .
+
+ns2:pennpos a ns5:ObjectProperty .
+
+ns6:hasDeterminer a ns5:ObjectProperty .
+
+ns9:Agent a ns5:ObjectProperty .
+
+ns9:Patient a ns5:ObjectProperty .
+
+rdfs:subClassOf a ns5:ObjectProperty .
+
+ns5:equivalentClass a ns5:ObjectProperty .
+
+<https://w3id.org/stlab/fred/rst/data/1/satellite_1> a rst:Satellite ;
+    rst:endOffset "47" ;
+    rst:score "0.5"^^xsd:float ;
+    rst:startOffset "19" ;
+    rst:text " The apple was really tasty." .
+
+<http://dbpedia.org/resource/Apple_Inc.> rdfs:subClassOf <http://schema.org/Organization> .
+
+<http://www.ontologydesignpatterns.org/ont/fred/eat_1> a <http://www.ontologydesignpatterns.org/ont/fred/Eat> ;
+    ns9:Agent <http://www.ontologydesignpatterns.org/ont/fred/Marco> ;
+    ns9:Patient <http://www.ontologydesignpatterns.org/ont/fred/apple_1> .
+
+<http://www.w3.org/2006/03/wn/wn30/instances/synset-apple-noun-1> ns7:gloss "fruit with red or yellow or green skin and sweet to tart crisp whitish flesh"@en-US .
+
+<https://w3id.org/stlab/fred/rst/data/1/satelite_1> a rst:Satellite .
+
+<http://www.ontologydesignpatterns.org/ont/fred/Apple> a ns5:Class ;
+    ns2:boxerpos ns2:n ;
+    rdfs:subClassOf ns3:PhysicalObject,
+        <http://www.w3.org/2006/03/wn/wn30/instances/supersense-noun_food> ;
+    ns5:equivalentClass <http://dbpedia.org/resource/Apple_Inc.>,
+        <http://www.w3.org/2006/03/wn/wn30/instances/synset-apple-noun-1> .
+
+<http://www.ontologydesignpatterns.org/ont/fred/Eat> ns2:boxerpos ns2:v ;
+    rdfs:subClassOf ns3:Event ;
+    ns5:equivalentClass <http://www.ontologydesignpatterns.org/ont/vn/data/Eat_39010100>,
+        <http://www.w3.org/2006/03/wn/wn30/instances/synset-eat-verb-1> .
+
+<http://www.ontologydesignpatterns.org/ont/fred/Marco> ns10:possibleType <http://dbpedia.org/ontology/Place> ;
+    rst:belongsTo <https://w3id.org/stlab/fred/rst/data/1/nucleus_1> .
+
+<http://www.ontologydesignpatterns.org/ont/fred/Really> ns2:boxerpos ns2:a .
+
+<http://www.ontologydesignpatterns.org/ont/fred/Tasty> ns3:hasQuality <http://www.ontologydesignpatterns.org/ont/fred/Really> ;
+    ns2:boxerpos ns2:a .
+
+<https://w3id.org/stlab/fred/rst/data/1/nucleus_1> a rst:Nucleus ;
+    rst:elaboration <https://w3id.org/stlab/fred/rst/data/1/satelite_1> ;
+    rst:endOffset "19" ;
+    rst:score "1.0"^^xsd:float ;
+    rst:startOffset "0" ;
+    rst:text "Marco eat an apple." .
+
+<http://www.ontologydesignpatterns.org/ont/fred/apple_1> a <http://www.ontologydesignpatterns.org/ont/fred/Apple> ;
+    ns3:hasQuality <http://www.ontologydesignpatterns.org/ont/fred/Tasty> ;
+    ns6:hasDeterminer ns6:an ;
+    rst:belongsTo <https://w3id.org/stlab/fred/rst/data/1/nucleus_1> .
+
+<http://www.ontologydesignpatterns.org/ont/fred/docuverse> a ns4:StringDocuverse ;
+    ns4:hasContent """Marco eat an apple. The apple was really tasty.
+""" .
+

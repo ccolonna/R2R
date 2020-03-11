@@ -2,19 +2,19 @@
 R2R: RST to RDF
 ===============
 
-R2R roduces RDF annotated according to RST owl semantics at https://github.com/Christian-Nja/rst-ontology
+R2R produces RDF annotated according to RST owl semantics at https://github.com/Christian-Nja/rst-ontology
 
 The following application is deployed as multi-service docker container.
 
 To install it do:
 
 $ git clone <repository>
-$ cd R2R
+$ cd r2r
 $ docker-compose build
 
 # to launch the service
 
-$ docker-compose up 
+$ docker-compose run
 
 *************
 * ATTENTION: You need docker-compose and docker on your machine
@@ -24,13 +24,23 @@ The container exposes a Flask Api listening on localhost:5050
 
 To parse a file do:
 
-curl -X POST -F "input=@<plain_file>" -F "doc=<doc_number> -F "ns=<namespace>" -F "ext=xml" -F "sal=False" http://localhost:5050 
+curl -X POST -F "input=@<plain_file>" -F "doc=<doc_number> -F "ns=<namespace>" -F "ext=xml" -F "s=0.8" http://localhost:5050/rst 
 
 OPTIONAL PARAMETERS:
 	doc : the doc parsed number to be append to namespace (use this with a counter if your parsing a corpora). [default = 1]
-	ns : namespace. [default = https://w3id.org/stlab/fred/rst/data/]
+	ns  : namespace. [default = https://w3id.org/stlab/fred/rst/data/]
 	ext : rdf serialization format [default=n3]
-        sal : get edu and saliency scores as json [default=False]
-	      { 1 : { 'text' : <edu_1 text> , 'score': <edu_1 score> , 'heat_color':<saliency rb color>, ... }	
-	      note: with sal you lose discourse structure
+	s   : saliency treshold for facts endpoint. Extract all the facts with saliency score greater than s [default=0.7]
 
+================================================
+*************
+*	    *
+* ENDPOINTS * 
+*           *
+*************
+
+/rst       =>  " returns RDF graph according to RST semantics "
+/fred      =>  " returns RDF graph according to FRED semantics "
+/bridge    =>  " returns bridge RDF graph between RST semantics and FRED semantics
+/saliency  =>  " returns discourse segments with relative saliency score and saliency color according to a binary blue-red gradient
+/facts     =>  " a simple example to extract important facts: return Event, Agent and Patient"

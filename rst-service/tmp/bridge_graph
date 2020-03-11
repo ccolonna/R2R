@@ -1,0 +1,183 @@
+@prefix ns1: <http://www.essepuntato.it/2008/12/earmark#> .
+@prefix ns10: <http://www.ontologydesignpatterns.org/ont/fred/> .
+@prefix ns2: <http://www.ontologydesignpatterns.org/ont/fred/pos.owl#> .
+@prefix ns3: <http://ontologydesignpatterns.org/cp/owl/semiotics.owl#> .
+@prefix ns4: <http://www.w3.org/2006/03/wn/wn30/schema/> .
+@prefix ns5: <http://www.ontologydesignpatterns.org/ont/vn/abox/role/> .
+@prefix ns6: <http://www.w3.org/2002/07/owl#> .
+@prefix ns7: <http://www.ontologydesignpatterns.org/ont/fred/quantifiers.owl#> .
+@prefix ns8: <http://www.ontologydesignpatterns.org/ont/dul/DUL.owl#> .
+@prefix ns9: <http://www.ontologydesignpatterns.org/ont/boxer/boxer.owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix rst: <https://rst-ontology-ns/> .
+@prefix xml: <http://www.w3.org/XML/1998/namespace> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+ns3:denotes a ns6:ObjectProperty .
+
+ns3:hasInterpretant a ns6:ObjectProperty .
+
+ns1:begins a ns6:ObjectProperty .
+
+ns1:ends a ns6:ObjectProperty .
+
+ns1:hasContent a ns6:ObjectProperty .
+
+ns1:refersTo a ns6:ObjectProperty .
+
+ns9:possibleType a ns6:ObjectProperty .
+
+ns8:hasQuality a ns6:ObjectProperty .
+
+ns10:locatedIn a ns6:ObjectProperty .
+
+ns10:offset_0_5_There a ns1:PointerRange ;
+    rdfs:label "There"^^xsd:string ;
+    ns3:denotes ns10:there_1 ;
+    ns3:hasInterpretant ns10:There ;
+    ns1:begins "0"^^xsd:nonNegativeInteger ;
+    ns1:ends "5"^^xsd:nonNegativeInteger ;
+    ns1:refersTo ns10:docuverse ;
+    ns2:pennpos ns2:EX .
+
+ns10:offset_12_15_old a ns1:PointerRange ;
+    rdfs:label "old"^^xsd:string ;
+    ns3:hasInterpretant ns10:Old ;
+    ns1:begins "12"^^xsd:nonNegativeInteger ;
+    ns1:ends "15"^^xsd:nonNegativeInteger ;
+    ns1:refersTo ns10:docuverse ;
+    ns2:pennpos ns2:JJ .
+
+<http://www.ontologydesignpatterns.org/ont/fred/offset_12_25_old+fisherman> a ns1:PointerRange ;
+    rdfs:label "Old Fisherman"^^xsd:string,
+        "old fisherman"^^xsd:string ;
+    ns3:denotes ns10:OldFisherman ;
+    ns1:begins "12"^^xsd:nonNegativeInteger ;
+    ns1:ends "25"^^xsd:nonNegativeInteger ;
+    ns1:refersTo ns10:docuverse .
+
+ns10:offset_16_25_fisherman a ns1:PointerRange ;
+    rdfs:label "fisherman"^^xsd:string ;
+    ns3:denotes ns10:fisherman_1 ;
+    ns3:hasInterpretant ns10:Fisherman ;
+    ns1:begins "16"^^xsd:nonNegativeInteger ;
+    ns1:ends "25"^^xsd:nonNegativeInteger ;
+    ns1:refersTo ns10:docuverse ;
+    ns2:pennpos ns2:NN .
+
+ns10:offset_26_28_in a ns1:PointerRange ;
+    rdfs:label "in"^^xsd:string ;
+    ns3:hasInterpretant ns10:In ;
+    ns1:begins "26"^^xsd:nonNegativeInteger ;
+    ns1:ends "28"^^xsd:nonNegativeInteger ;
+    ns1:refersTo ns10:docuverse ;
+    ns2:pennpos ns2:IN .
+
+ns10:offset_29_33_Cuba a ns1:PointerRange ;
+    rdfs:label "Cuba"^^xsd:string ;
+    ns3:denotes ns10:Cuba ;
+    ns1:begins "29"^^xsd:nonNegativeInteger ;
+    ns1:ends "33"^^xsd:nonNegativeInteger ;
+    ns1:refersTo ns10:docuverse ;
+    ns2:pennpos ns2:NNP .
+
+ns10:offset_34_40_called a ns1:PointerRange ;
+    rdfs:label "called"^^xsd:string ;
+    ns3:denotes ns10:call_1 ;
+    ns3:hasInterpretant ns10:Call ;
+    ns1:begins "34"^^xsd:nonNegativeInteger ;
+    ns1:ends "40"^^xsd:nonNegativeInteger ;
+    ns1:refersTo ns10:docuverse ;
+    ns2:pennpos ns2:VBD .
+
+ns10:offset_41_49_Santiago a ns1:PointerRange ;
+    rdfs:label "Santiago"^^xsd:string ;
+    ns3:denotes ns10:Santiago ;
+    ns1:begins "41"^^xsd:nonNegativeInteger ;
+    ns1:ends "49"^^xsd:nonNegativeInteger ;
+    ns1:refersTo ns10:docuverse ;
+    ns2:pennpos ns2:NNP .
+
+ns2:boxerpos a ns6:ObjectProperty .
+
+ns2:pennpos a ns6:ObjectProperty .
+
+ns7:hasDeterminer a ns6:ObjectProperty .
+
+ns5:Predicate a ns6:ObjectProperty .
+
+ns5:Theme a ns6:ObjectProperty .
+
+rdfs:subClassOf a ns6:ObjectProperty .
+
+ns6:equivalentClass a ns6:ObjectProperty .
+
+<https://w3id.org/stlab/fred/rst/data/1/nucleus_1> a rst:Nucleus ;
+    rst:elaboration <https://w3id.org/stlab/fred/rst/data/1/satelite_1> ;
+    rst:endOffset "33" ;
+    rst:score "1.0"^^xsd:float ;
+    rst:startOffset "0" ;
+    rst:text "There is an old fisherman in Cuba" .
+
+<https://w3id.org/stlab/fred/rst/data/1/satellite_1> a rst:Satellite ;
+    rst:endOffset "50" ;
+    rst:score "0.5"^^xsd:float ;
+    rst:startOffset "33" ;
+    rst:text " called Santiago." .
+
+<http://dbpedia.org/resource/Cuba> a <http://schema.org/Country>,
+        <http://schema.org/Place> .
+
+<http://dbpedia.org/resource/Santiago> a <http://schema.org/Place> .
+
+ns10:call_1 a ns10:Call ;
+    ns5:Predicate ns10:Santiago ;
+    ns5:Theme ns10:there_1 .
+
+ns10:fisherman_1 ns7:hasDeterminer ns7:an .
+
+<http://www.w3.org/2006/03/wn/wn30/instances/synset-fisherman-noun-1> ns4:gloss "someone whose occupation is catching fish"@en-US .
+
+<http://www.w3.org/2006/03/wn/wn30/instances/synset-there-noun-1> ns4:gloss "a location other than here; that place; \"you can take it from there\""@en-US .
+
+<https://w3id.org/stlab/fred/rst/data/1/satelite_1> a rst:Satellite .
+
+ns10:Call ns2:boxerpos ns2:v ;
+    rdfs:subClassOf ns8:Event ;
+    ns6:equivalentClass <http://www.ontologydesignpatterns.org/ont/vn/data/Call_29030000> .
+
+ns10:Cuba ns9:possibleType <http://dbpedia.org/ontology/Place> ;
+    = <http://dbpedia.org/resource/Cuba> .
+
+ns10:Fisherman a ns6:Class ;
+    ns2:boxerpos ns2:n ;
+    rdfs:subClassOf ns8:Person,
+        <http://www.w3.org/2006/03/wn/wn30/instances/supersense-noun_person> ;
+    ns6:equivalentClass <http://www.w3.org/2006/03/wn/wn30/instances/synset-fisherman-noun-1> .
+
+ns10:Old a ns6:Class ;
+    ns2:boxerpos ns2:a ;
+    rdfs:subClassOf ns8:Quality ;
+    ns6:equivalentClass <http://www.w3.org/2006/03/wn/wn30/instances/synset-old-adjective-1> .
+
+ns10:OldFisherman a ns6:Class ;
+    ns8:hasQuality ns10:Old ;
+    rdfs:subClassOf ns10:Fisherman .
+
+ns10:Santiago ns9:possibleType <http://dbpedia.org/ontology/Place> ;
+    = <http://dbpedia.org/resource/Santiago> .
+
+ns10:There ns2:boxerpos ns2:n ;
+    rdfs:subClassOf <http://www.ontologydesignpatterns.org/ont/d0.owl#Location>,
+        <http://www.w3.org/2006/03/wn/wn30/instances/supersense-noun_location> ;
+    ns6:equivalentClass <http://www.w3.org/2006/03/wn/wn30/instances/synset-there-noun-1> .
+
+ns10:there_1 a ns10:OldFisherman,
+        ns10:There ;
+    ns10:locatedIn ns10:Cuba .
+
+ns10:docuverse a ns1:StringDocuverse ;
+    ns1:hasContent """There is an old fisherman in Cuba called Santiago.
+""" .
+
