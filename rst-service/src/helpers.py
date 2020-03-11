@@ -4,7 +4,7 @@
 # 
 # helpers for rst-service api
 
-import os, io
+import os, io, uuid
 
 import requests
 from werkzeug.utils import secure_filename
@@ -57,8 +57,9 @@ class FileHandler(object):
             plain_file = request.files[filekey].filename
             self.save_secure_file(request.files[filekey], folder)
         elif request.form.get(filekey):
-            plain_file = "plain.txt"
-            self.save_file(request.form.get(filekey), folder, "plain.txt")
+            uuid_value = uuid.uuid1()
+            plain_file = "plain_" + str(uuid_value) + ".txt"
+            self.save_file(request.form.get(filekey), folder, plain_file)
         return plain_file
 
 

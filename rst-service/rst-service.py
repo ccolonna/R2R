@@ -110,4 +110,4 @@ def test_request():
 # ====== RUN API =======
 
 if __name__ == '__main__':
-    app.run(host=HOST, threaded=True, port=PORT, debug=DEBUG)
+    app.run(host=HOST, threaded=False, port=PORT, processes=3, debug=DEBUG)
