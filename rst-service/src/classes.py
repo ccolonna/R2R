@@ -188,8 +188,8 @@ class RSTMiner(object):
                 tn = 'satellite_' + str(node_hash_map[terminal_node.index])
                 tnclass = 'Satellite'
             g.add( (doc_ns[tn], RDF.type, rst[tnclass]))
-            g.add( ( doc_ns[tn], rst.startOffset, Literal(str(offset[0])) ) )
-            g.add( ( doc_ns[tn], rst.endOffset, Literal(str(offset[1])) ) )
+            g.add( ( doc_ns[tn], rst.startOffset, Literal(str(offset[0]), datatype=XSD.nonNegativeInteger) ) )
+            g.add( ( doc_ns[tn], rst.endOffset, Literal(str(offset[1]), datatype=XSD.nonNegativeInteger) ) )
             g.add( ( doc_ns[tn], rst.text, Literal(text) ) )
             g.add( ( doc_ns[tn], rst.score, Literal(terminal_node.get_saliency_score(),datatype=XSD.float ) ) )
         
@@ -219,21 +219,47 @@ class RSTMiner(object):
             blue = ((bB - aB) * value) + aB
             return (red, green, blue)
 
-        QUERY = """ 
-            SELECT DISTINCT ?o ?t ?s
-            WHERE {
-                ?n rst:startOffset ?o .
-                ?n rst:text ?t .
-                ?n rst:score ?s .
-            }
-        """
-        data = g.query(QUERY)
+        query = """ 
+                SELECT DISTINCT ?o ?t ?s
+                WHERE {
+                    ?n rst:startOffset ?o .
+                    ?n rst:text ?t .
+                    ?n rst:score ?s .
+                }
+                """
+        data = g.query(query)
         data2send = []
         fltr = lambda t : int(t.o)
         for row in sorted(data, key=fltr):
             data2send.append({ 'text' : word_tokenize(row.t) , 'score' : row.s , 'heat_color' : get_heat_color(float(row.s))})
         return { 'edus' : data2send }
 
+    def extract_facts(self, g, saliency_treshold):
+        query = """
+                PREFIX rst: <https://rst-ontology-ns/> 
+                PREFIX dul: <http://www.ontologydesignpatterns.org/ont/dul/DUL.owl#>
+                PREFIX vnrole: <http://www.ontologydesignpatterns.org/ont/vn/abox/role/>
+                PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> 
+                PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+
+                SELECT ?event ?agent ?patient
+                WHERE {
+                    ?event rst:belongsTo ?edu ;
+                            rdf:type ?class ;
+                            vnrole:Agent ?agent ;
+                            vnrole:Patient ?patient .
+                    ?edu rst:score ?s .
+                    ?class rdfs:subClassOf dul:Event .
+
+                    FILTER ( ?s >=  ?saliency_threshold )
+                }
+                """
+        data = g.query(query, initBindings={"?saliency_threshold":Literal(saliency_treshold, datatype=XSD.float)})
+        data2send = []
+
+        for row in data:
+            data2send.append({ 'event':row.event, 'agent':row.agent, 'patient':row.patient})
+        return { 'important_facts' : data2send }
 
 class GlobalStorage(object):
 
@@ -262,6 +288,7 @@ class BridgeGraph(Graph):
         self.parse(data = rst_data, format=in_ext)
         self.parse(data = fred_data, format=in_ext)
         self.__bridge()
+        return self
 
     def __get_fred_offset(self, s):
         return s.split('_')[1]
@@ -277,9 +304,9 @@ class BridgeGraph(Graph):
         qres = self.query(query)
 
         res = []
+        
         for row in qres:
             res.append((row[0], self.__get_fred_offset(row[1].strip()))) # denoted, startOffset
-
         return res
 
     def __get_denoted_edu(self, denoted_tuple):
@@ -291,7 +318,8 @@ class BridgeGraph(Graph):
         """
         query = "PREFIX rst: <https://rst-ontology-ns/>" \
                 " SELECT  ?textspan WHERE { ?textspan rst:startOffset ?start ; rst:endOffset ?end . FILTER (?start <= ?denoted_start && ?denoted_start < ?end) }"
-        qres = self.query(query, initBindings={"?denoted_start":Literal(denoted_tuple[1])})
+        qres = self.query(query, initBindings={"?denoted_start":Literal(denoted_tuple[1], datatype=XSD.nonNegativeInteger)})
+#        import pdb; pdb.set_trace()
 
         for row in qres:
             # ============== add membership triple ==================
@@ -300,7 +328,7 @@ class BridgeGraph(Graph):
     def __bridge(self):
         """ Add a membership relation between R2R edu's and FRED objects and facts
         """ 
-        denoteds = self.__get_denoted_and_start_offset()
+        denoteds = self.__get_denoted_and_start_offset() # seeing this with pdb eat_1 is inside the denoteds
 
         for d in denoteds:
             self.__get_denoted_edu(d)

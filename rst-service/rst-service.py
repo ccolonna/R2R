@@ -64,13 +64,16 @@ def saliency():
 @cross_origin()
 def merge():
     set_rst_params()
-    rst = produce_rdf().serialize(format=storage.get_rdf_params().serialization)
-    fred = produce_fred().serialize(format=storage.get_rdf_params().serialization)
-    g = BridgeGraph()
-    g.merge(rst, fred, storage.get_rdf_params().serialization)
+    g = produce_bridge_graph()
     return (g.serialize(format=storage.get_rdf_params().serialization))
 
-
+@app.route("/facts", methods=["POST"])
+@cross_origin()
+def facts():
+    set_rst_params()
+    SALIENCY_TRESHOLD = 0
+    g = produce_bridge_graph()
+    return rstminer.extract_facts(g, SALIENCY_TRESHOLD)
 
 # ========== FUNCTIONS ============
 
@@ -99,6 +102,12 @@ def produce_fred():
     fredDialer = FREDDialer()
     g = fredDialer.dial(storage.get_raw_text())
     return g
+
+def produce_bridge_graph():
+    rst = produce_rdf().serialize(format=storage.get_rdf_params().serialization)
+    fred = produce_fred().serialize(format=storage.get_rdf_params().serialization)
+    g = BridgeGraph()
+    return g.merge(rst, fred, storage.get_rdf_params().serialization)
 
 # ======== TEST API ===============
 @app.route("/test", methods=["GET"])
