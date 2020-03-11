@@ -152,6 +152,9 @@ class RSTMiner(object):
         return { 'edus' : data2send }
 
     def extract_facts(self, g, saliency_treshold):
+	def clean_uri(uri):
+		return uri.split("/")[-1]
+
         query = """
                 PREFIX rst: <https://rst-ontology-ns/> 
                 PREFIX dul: <http://www.ontologydesignpatterns.org/ont/dul/DUL.owl#>
@@ -159,11 +162,12 @@ class RSTMiner(object):
                 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> 
                 PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 
-                SELECT ?event ?agent ?patient
+                SELECT ?event ?agent ?patient ?location
                 WHERE {
                     ?event rst:belongsTo ?edu ;
                             rdf:type ?class ;
                             vnrole:Agent ?agent ;
+                            vnrole:Location ?location ;
                             ?objectPredicate ?patient .
                     ?edu rst:score ?s .
                     ?class rdfs:subClassOf dul:Event .
@@ -175,7 +179,7 @@ class RSTMiner(object):
         data2send = []
 
         for row in data:
-            data2send.append({ 'event':row.event, 'agent':row.agent, 'patient':row.patient})
+            data2send.append({ 'event':clean_uri(row.event), 'agent':clean_uri(row.agent), 'patient':clean_uri(row.patient), 'location':clean_uri(row.location)})
         return { 'important_facts' : data2send }
 
 class BridgeGraph(Graph):
