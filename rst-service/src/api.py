@@ -17,14 +17,14 @@ class RDFParams(object):
     TRESHOLD = 's'
     # default values
     DEFAULT_FORMAT = 'n3'
-    DEFAULT_TRESHOLD = 0.7
+    DEFAULT_TRESHOLD = 0.6
     DEFAULT_NAMESPACE = 'https://w3id.org/stlab/fred/rst/data/'
 
     def __init__(self, request_form):
         self.doc_n = request_form.get(self.DOC_NUMBER) if request_form.get(self.DOC_NUMBER) else 1
         self.ns = request_form.get(self.NAMESPACE) if request_form.get(self.NAMESPACE) else self.DEFAULT_NAMESPACE
         self.serialization = request_form.get(self.FORMAT) if request_form.get(self.FORMAT) else self.DEFAULT_FORMAT
-        self.treshold = request_form.get(self.TRESHOLD) if request_form.get(self.TRESHOLD) else self.DEFAULT_TRESHOLD
+        self.treshold = float(request_form.get(self.TRESHOLD)) if request_form.get(self.TRESHOLD) else self.DEFAULT_TRESHOLD
 
 class GlobalStorage(object):
 
